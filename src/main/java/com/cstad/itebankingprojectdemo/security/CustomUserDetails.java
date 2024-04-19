@@ -18,13 +18,12 @@ public class CustomUserDetails implements UserDetails {
     @Override
     // Authority connected with role
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return user.getRoles();
     }
 
     @Override
     public String getPassword() {
-
-        return getPassword();
+        return user.getPassword();
     }
 
     @Override
@@ -50,6 +49,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getIsDeleted();
+        return !user.getIsDeleted();
     }
 }

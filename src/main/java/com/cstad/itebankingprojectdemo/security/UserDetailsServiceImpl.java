@@ -9,6 +9,8 @@ import com.cstad.itebankingprojectdemo.features.user.dto.UserDetailsResponse;
 import com.cstad.itebankingprojectdemo.features.user.dto.UserResponse;
 import com.cstad.itebankingprojectdemo.features.user.dto.UserUpdateRequest;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,38 +20,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
-public class UserDetailsServiceImpl implements UserService {
-   private UserRepository userRepository;
-   private UserService userService;
+@ToString
+public class UserDetailsServiceImpl implements UserDetailsService {
+    private final UserRepository userRepository;
 
     @Override
-    public void createNew(UserCreateRequest userCreateRequest) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByPhoneNumber(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User has not been found with username: " + username));
+        log.info("User: {}",user);
 
-    }
-
-    @Override
-    public UserResponse updateByUuid(String uuid, UserUpdateRequest userUpdateRequest) {
-        return null;
-    }
-
-    @Override
-    public Page<UserResponse> findList(int page, int limit) {
-        return null;
-    }
-
-    @Override
-    public UserDetailsResponse findByUuid(String uuid) {
-        return null;
-    }
-
-    @Override
-    public BasedMessage blockByUuid(String uuid) {
-        return null;
-    }
-    @Override
-    public void deleteByUuid(String uuid) {
-
+        CustomUserDetails customUserDetails = new CustomUserDetails();
+        customUserDetails.setUser(user);
+        return customUserDetails;
     }
 }
