@@ -9,6 +9,7 @@ import java.util.Optional;
 @Repository
 public interface AccountTypeRepository extends JpaRepository<AccountType, Integer> {
 
-    <AccountType> Optional<AccountType> findByAlias(String alias);
+    Optional<AccountType> findByAlias(String alias);
 
+    AccountType findByAliasContainsIgnoreCase(String s);
 }
