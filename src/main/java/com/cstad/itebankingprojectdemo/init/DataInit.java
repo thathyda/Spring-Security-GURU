@@ -1,46 +1,76 @@
 package com.cstad.itebankingprojectdemo.init;
 
 import com.cstad.itebankingprojectdemo.domain.AccountType;
+import com.cstad.itebankingprojectdemo.domain.Authority;
 import com.cstad.itebankingprojectdemo.domain.Role;
+import com.cstad.itebankingprojectdemo.domain.User;
+import com.cstad.itebankingprojectdemo.features.account.AccountRepository;
 import com.cstad.itebankingprojectdemo.features.accounttype.AccountTypeRepository;
+import com.cstad.itebankingprojectdemo.features.user.AuthorityRepository;
 import com.cstad.itebankingprojectdemo.features.user.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 public class DataInit {
 
     private final RoleRepository roleRepository;
     private final AccountTypeRepository accountTypeRepository;
+    private final AccountRepository accountRepository;
 
     @PostConstruct
     void initRole() {
 
-        // Auto generate role (USER, CUSTOMER, STAFF, ADMIN)
-        if (roleRepository.count() < 1) {
+            Authority userRead = new Authority();
+            userRead.setName("user:read");
+            Authority userWrite = new Authority();
+            userWrite.setName("user:write");
+            Authority transactionRead = new Authority();
+            transactionRead.setName("transaction:read");
+            Authority transactionWrite = new Authority();
+            transactionWrite.setName("transaction:write");
+            Authority accountRead = new Authority();
+            accountRead.setName("account:read");
+            Authority accountWrite = new Authority();
+            accountWrite.setName("account:write");
+            Authority accountTypeRead = new Authority();
+            accountTypeRead.setName("accountType:read");
+            Authority accountTypeWrite = new Authority();
+            accountTypeWrite.setName("accountType:write");
+
             Role user = new Role();
             user.setName("USER");
+            user.setAuthorities(List.of(
+                    userRead, transactionRead,
+                    accountRead, accountTypeRead
+            ));
 
             Role customer = new Role();
             customer.setName("CUSTOMER");
+            customer.setAuthorities(List.of(
+                    userWrite, transactionWrite,
+                    accountWrite
+            ));
 
             Role staff = new Role();
             staff.setName("STAFF");
+            staff.setAuthorities(List.of(
+                    accountTypeWrite
+            ));
 
             Role admin = new Role();
             admin.setName("ADMIN");
+            admin.setAuthorities(List.of(
+                    userWrite, accountWrite,
+                    accountTypeWrite
+            ));
 
             roleRepository.saveAll(
                     List.of(user, customer, staff, admin)
             );
-        }
-
     }
-
     @PostConstruct
     void initAccountType() {
         if (accountTypeRepository.count() < 1) {
@@ -66,5 +96,4 @@ public class DataInit {
             accountTypeRepository.save(cardActType);
         }
     }
-
 }

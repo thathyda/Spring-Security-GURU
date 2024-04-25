@@ -1,5 +1,6 @@
 package com.cstad.itebankingprojectdemo.features.auth.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
