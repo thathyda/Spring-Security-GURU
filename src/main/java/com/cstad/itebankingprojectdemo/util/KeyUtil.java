@@ -108,5 +108,4 @@ public class KeyUtil {
     public RSAPrivateKey getRefreshTokenPrivateKey() {
         return (RSAPrivateKey) getRefreshTokenKeyPair().getPrivate();
     }
-
 }
